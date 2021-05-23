@@ -1,14 +1,16 @@
-anticorhtml="anticor.html"
-curl https://www.anticor.org/articles/ > $anticorhtml
+anticorhtml="$(dirname "$BASH_SOURCE")/anticor.html"
+mkdir -p /tmp/rss
+tmpfile="/tmp/rss/tmp.html"
+curl https://www.anticor.org/articles/ > $anticorhtml 2>/dev/null
 lineNum="$(awk '/<div class="news border-style pb-4 pt-4">/{ print NR; exit}' ${anticorhtml})"
-tail -n +$lineNum $anticorhtml > tmp.html
-mv tmp.html $anticorhtml
+tail -n +$lineNum $anticorhtml > $tmpfile
+mv $tmpfile $anticorhtml
 lineNum="$(awk '/<\/div><div class="pagination-container initialisation"><div class="pagination"><span aria-current="page" class="page-numbers current">1<\/span>/{ print NR; exit}' ${anticorhtml})"
-head -n $lineNum $anticorhtml > tmp.html
-mv tmp.html $anticorhtml
+head -n $lineNum $anticorhtml > $tmpfile
+mv $tmpfile $anticorhtml
 
 # write rss
-anticorrss="anticor.xml"
+anticorrss="$(dirname "$BASH_SOURCE")/anticor.xml"
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > $anticorrss
 echo "<rss version=\"2.0\">" >> $anticorrss
 echo "  <channel>" >> $anticorrss
@@ -18,8 +20,8 @@ echo "    <language>fr-FR</language>" >> $anticorrss
 echo "    <link>https://www.anticor.org/articles/</link>" >> $anticorrss
 
 lineNum="$(awk '/<div class="news border-style pb-4 pt-4">/{ print NR; exit}' ${anticorhtml})"
-tail -n +$(($lineNum+1)) $anticorhtml > tmp.html
-mv tmp.html $anticorhtml
+tail -n +$(($lineNum+1)) $anticorhtml > $tmpfile
+mv $tmpfile $anticorhtml
 while [[ ! -z "$lineNum" ]]
 do
 	echo "    <item>" >> $anticorrss
@@ -52,8 +54,8 @@ do
 	echo "    </item>" >> $anticorrss
 
 	lineNum="$(awk '/<div class="news border-style pb-4 pt-4">/{ print NR; exit}' ${anticorhtml})"
-	tail -n +$(($lineNum+1)) $anticorhtml > tmp.html
-	mv tmp.html $anticorhtml
+	tail -n +$(($lineNum+1)) $anticorhtml > $tmpfile
+	mv $tmpfile $anticorhtml
 done
 
 echo "  </channel>" >> $anticorrss

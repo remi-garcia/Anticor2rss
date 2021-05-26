@@ -1,3 +1,4 @@
+#!/bin/bash
 anticorhtml="$(dirname "$BASH_SOURCE")/anticor.html"
 mkdir -p /tmp/rss
 tmpfile="/tmp/rss/tmp.html"
@@ -27,6 +28,7 @@ do
 	echo "    <item>" >> $anticorrss
 	lineNum="$(awk '/<h2>/{ print NR; exit}' ${anticorhtml})"
 	title="$(head -${lineNum} ${anticorhtml} | tail +${lineNum} | sed -n -e 's/^.*<h2>\(.*\)<\/h2>/\1/p')"
+	title="${title//\&rsquo\;/\'}"
 	echo "      <title>${title}</title>" >> $anticorrss
 	lineNum="$(awk '/<a href=/{ print NR; exit}' ${anticorhtml})"
 	link="$(head -${lineNum} ${anticorhtml} | tail +${lineNum} | sed -n -e 's/^.*<a href="\(.*\)">/\1/p')"

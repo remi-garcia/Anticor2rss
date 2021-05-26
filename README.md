@@ -5,3 +5,5 @@ Génère un flux rss pour les articles d'[Anticor](https://www.anticor.org/artic
 ```bash
 $ ./anticor2rss.sh
 ```
+
+Flux rss disponible [ici](https://www.remigarcia.xyz/rss/anticor.xml) et mis à jour tous les jours à minuit.

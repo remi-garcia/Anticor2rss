@@ -11,7 +11,7 @@ head -n $lineNum $anticorhtml > $tmpfile
 mv $tmpfile $anticorhtml
 
 # write rss
-anticorrss="$(dirname "$BASH_SOURCE")/anticor.xml"
+anticorrss="$(dirname "$BASH_SOURCE")/anticor.rss"
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > $anticorrss
 echo "<rss version=\"2.0\">" >> $anticorrss
 echo "  <channel>" >> $anticorrss
@@ -48,10 +48,10 @@ do
 	pubdate="${pubdate//octobre/Oct}"
 	pubdate="${pubdate//novembre/Nov}"
 	pubdate="${pubdate//décembre/Dec}"
-	echo "      <pubDate>${pubdate}</pubDate>" >> $anticorrss
+	echo "      <pubDate>${pubdate} 00:00:00 UT</pubDate>" >> $anticorrss
 	lineNum="$(awk '/<p>/{ print NR; exit}' ${anticorhtml})"
 	description="$(head -${lineNum} ${anticorhtml} | tail +${lineNum} | sed 's/^ *//g')"
-	echo "      <description>${description}</description>" >> $anticorrss
+	echo "      <description><![CDATA[${description}]]></description>" >> $anticorrss
 
 	echo "    </item>" >> $anticorrss
 

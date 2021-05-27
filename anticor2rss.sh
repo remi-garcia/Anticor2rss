@@ -2,7 +2,7 @@
 anticorhtml="$(dirname "$BASH_SOURCE")/anticor.html"
 mkdir -p /tmp/rss
 tmpfile="/tmp/rss/tmp.html"
-curl https://www.anticor.org/articles/ > $anticorhtml 2>/dev/null
+curl https://www.anticor.org/articles/?$RANDOM > $anticorhtml 2>/dev/null
 lineNum="$(awk '/<div class="news border-style pb-4 pt-4">/{ print NR; exit}' ${anticorhtml})"
 tail -n +$lineNum $anticorhtml > $tmpfile
 mv $tmpfile $anticorhtml
